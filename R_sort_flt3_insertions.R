@@ -19,6 +19,7 @@
 
 
 rm(list=ls())
+setwd("/data/FLT3_insertion_check/")
 
 data=read.table("parsed_flt3_SIs_all_libs.csv",sep="\t",header=1,fill = T,stringsAsFactors = F)
 
@@ -92,3 +93,18 @@ write.table(dataoutsmall,file="Results_FLT3_summary.csv",sep="\t",quote=F,row.na
  
 #Something weird with lib84 where 447 supporting reads but 0 unique!
 #42 is actually negative.
+
+#Dilution characteristics:
+tiff("Dilution_plot.tiff",res = 300,width = 6,height = 6,units="in")
+plot(c(1,2,3),c(dataoutsmall$Lib_78_all[23],dataoutsmall$Lib_83_all[23],dataoutsmall$Lib_84_all[23]),
+     pch=19,ylim=c(0,10000),xlim=c(1,3),
+     xlab="Dilution coefficient",ylab="Supporting reads",
+     axes=F)
+axis(2)
+axis(1,at = c(1,2,3), labels = c(1,1/0.25,1/0.125))
+points(c(1,2,3),c(1,0.25,0.125)*as.numeric(dataoutsmall$Lib_78_all[23]),pch=19,col=2)
+
+points(c(1,2,3),c(dataoutsmall$Lib_78_all[8],dataoutsmall$Lib_83_all[8],dataoutsmall$Lib_84_all[8]),pch=17)
+points(c(1,2,3),c(1,0.25,0.125)*as.numeric(dataoutsmall$Lib_78_all[8]),pch=17,col=2)
+legend("topright",col = c(1,2,1,2),pch=c(19,19,17,17),legend=c("insertion 1, measured","insertion 1, predicted","insertion 2, measured","insertion 2, predicted"))
+dev.off()
